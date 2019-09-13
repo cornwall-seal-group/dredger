@@ -1,0 +1,3 @@
+TRAINING_KEY = ''
+ENDPOINT = ''
+IMAGES_FOLDER = ''
