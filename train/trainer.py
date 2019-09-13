@@ -43,12 +43,12 @@ def create_classifier_model(tag):
 
                         # batch the requests
                         if len(image_list) == 60:
-                            send_images(trainer, project, image_list)
+                            #send_images(trainer, project, image_list)
 
                             image_list = []
 
     # send last images not hitting the 60 limit
-    send_images(trainer, project, image_list)
+    #send_images(trainer, project, image_list)
 
 
 def send_images(trainer, project, image_list):
