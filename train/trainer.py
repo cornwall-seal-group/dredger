@@ -19,33 +19,30 @@ def create_classifier_model(tag):
     tags = {}
     image_list = []
 
-    for subdir, dirs in os.walk(IMAGES_FOLDER):
+    for seal_name in os.listdir(IMAGES_FOLDER):
 
-        # See whether we have the tag folder for the seal
-        for subdirname in dirs:
-            seal_name = subdirname
-            print seal_name
+        print seal_name
 
-            if seal_name == 'pjf348':
+        if seal_name == 'pjf348':
 
-                tag_path = os.path.join(subdir, tag)
+            tag_path = os.path.join(seal_name, tag)
 
-                if os.path.isdir(tag_path):
-                    tags[seal_name] = trainer.create_tag(project.id, seal_name)
+            if os.path.isdir(tag_path):
+                tags[seal_name] = trainer.create_tag(project.id, seal_name)
 
-                    for file in os.listdir(tag_path):
-                        image_path = os.path.join(tag_path, file)
-                        with open(image_path, "rb") as image_contents:
-                            print image_path
+                for file in os.listdir(tag_path):
+                    image_path = os.path.join(tag_path, file)
+                    with open(image_path, "rb") as image_contents:
+                        print image_path
 
-                            image_list.append(ImageFileCreateEntry(
-                                name=file, contents=image_contents.read(), tag_ids=[tags[seal_name].id]))
+                        image_list.append(ImageFileCreateEntry(
+                            name=file, contents=image_contents.read(), tag_ids=[tags[seal_name].id]))
 
-                        # batch the requests
-                        if len(image_list) == 60:
-                            #send_images(trainer, project, image_list)
+                    # batch the requests
+                    if len(image_list) == 60:
+                        #send_images(trainer, project, image_list)
 
-                            image_list = []
+                        image_list = []
 
     # send last images not hitting the 60 limit
     #send_images(trainer, project, image_list)
