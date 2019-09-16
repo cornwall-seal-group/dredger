@@ -42,7 +42,9 @@ def create_classifier_model(tag):
 
                     tags[seal_name] = trainer.create_tag(project.id, seal_name)
 
-                    for file in os.listdir(tag_path):
+                    files = os.listdir(tag_path)
+                    files.sort().pop()
+                    for file in files:
                         num_rotations_per_image = int(
                             ceil(required_image_count / num_images_for_seal))
 
