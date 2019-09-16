@@ -36,7 +36,7 @@ def create_classifier_model(tag):
                 tagpath, tagdirs, tagfiles = next(os.walk(tag_path))
                 num_images_for_seal = len(tagfiles)
 
-                print 'Number of images found: ' + num_images_for_seal
+                print 'Number of images found: ' + str(num_images_for_seal)
 
                 if num_images_for_seal > 0:
 
