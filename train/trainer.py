@@ -38,53 +38,55 @@ def create_classifier_model(tag):
 
                 print 'Number of images found: ' + str(num_images_for_seal)
 
-                tags[seal_name] = trainer.create_tag(project.id, seal_name)
+                if num_images_for_seal > 0:
 
-                files = os.listdir(tag_path)
-                files.sort()
-                files.pop()
-                for file in files:
-                    num_rotations_per_image = int(
-                        ceil(required_image_count / num_images_for_seal))
+                    tags[seal_name] = trainer.create_tag(project.id, seal_name)
 
-                    rotations_each_way = (int(
-                        ceil(num_rotations_per_image / 2)) + 2)
+                    files = os.listdir(tag_path)
+                    files.sort()
+                    files.pop()
+                    for file in files:
+                        num_rotations_per_image = int(
+                            ceil(required_image_count / num_images_for_seal))
 
-                    image_path = os.path.join(tag_path, file)
+                        rotations_each_way = (int(
+                            ceil(num_rotations_per_image / 2)) + 2)
 
-                    for number in range(rotations_each_way):
-                        pil_image = Image.open(image_path)
-                        rotated = pil_image.rotate(number)
+                        image_path = os.path.join(tag_path, file)
 
-                        img_byte_arr = io.BytesIO()
-                        rotated.save(img_byte_arr, format='PNG')
-                        img_byte_arr = img_byte_arr.getvalue()
+                        for number in range(rotations_each_way):
+                            pil_image = Image.open(image_path)
+                            rotated = pil_image.rotate(number)
 
-                        image_list.append(ImageFileCreateEntry(
-                            name=file, contents=img_byte_arr, tag_ids=[tags[seal_name].id]))
+                            img_byte_arr = io.BytesIO()
+                            rotated.save(img_byte_arr, format='PNG')
+                            img_byte_arr = img_byte_arr.getvalue()
 
-                        # batch the requests
-                        if len(image_list) == 60:
-                            send_images(trainer, project, image_list)
+                            image_list.append(ImageFileCreateEntry(
+                                name=file, contents=img_byte_arr, tag_ids=[tags[seal_name].id]))
 
-                            image_list = []
+                            # batch the requests
+                            if len(image_list) == 60:
+                                send_images(trainer, project, image_list)
 
-                    for cc_number in range(359-rotations_each_way, 360):
-                        pil_image = Image.open(image_path)
-                        rotated = pil_image.rotate(cc_number)
+                                image_list = []
 
-                        img_byte_arr = io.BytesIO()
-                        rotated.save(img_byte_arr, format='PNG')
-                        img_byte_arr = img_byte_arr.getvalue()
+                        for cc_number in range(359-rotations_each_way, 360):
+                            pil_image = Image.open(image_path)
+                            rotated = pil_image.rotate(cc_number)
 
-                        image_list.append(ImageFileCreateEntry(
-                            name=file, contents=img_byte_arr, tag_ids=[tags[seal_name].id]))
+                            img_byte_arr = io.BytesIO()
+                            rotated.save(img_byte_arr, format='PNG')
+                            img_byte_arr = img_byte_arr.getvalue()
 
-                        # batch the requests
-                        if len(image_list) == 60:
-                            send_images(trainer, project, image_list)
+                            image_list.append(ImageFileCreateEntry(
+                                name=file, contents=img_byte_arr, tag_ids=[tags[seal_name].id]))
 
-                            image_list = []
+                            # batch the requests
+                            if len(image_list) == 60:
+                                send_images(trainer, project, image_list)
+
+                                image_list = []
 
     # send last images not hitting the 60 limit
     send_images(trainer, project, image_list)
