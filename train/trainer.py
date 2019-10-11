@@ -27,7 +27,6 @@ def create_classifier_model(tag):
     for seal_name in os.listdir(IMAGES_FOLDER):
 
         if seal_name not in folders_to_exclude:
-            print 'About to process: ' + seal_name
 
             tag_path = os.path.join(IMAGES_FOLDER, seal_name, tag)
 
@@ -36,9 +35,10 @@ def create_classifier_model(tag):
                 tagpath, tagdirs, tagfiles = next(os.walk(tag_path))
                 num_images_for_seal = len(tagfiles)
 
-                print 'Number of images found: ' + str(num_images_for_seal)
-
                 if num_images_for_seal > 0:
+
+                    print 'About to process: ' + seal_name
+                    print 'Number of images found: ' + str(num_images_for_seal)
 
                     tags[seal_name] = trainer.create_tag(project.id, seal_name)
 
